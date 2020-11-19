@@ -1,0 +1,204 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "PreInvoice",
+    "version": "1.0",
+    "contact": {
+      "name": "Vijay Satyanarayana",
+      "email": "vijay.satyanarayana@dell.com"
+    },
+    "description": "PreInvoice API"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/api/v1/preinvoices": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreInvoicesPage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        },
+        "operationId": "getPreInvoices",
+        "tags": [
+          "PreInvoice"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "pageSize"
+          },
+          {
+            "schema": {
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "offset"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "sortBy"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "orderBy"
+          }
+        ]
+      },
+      "parameters": []
+    },
+    "/api/v1/preinvoices/{id}/download": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 40
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [
+          "PreInvoice"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getPreInvoicesByIdDownload",
+        "parameters": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MonetaryAmount": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "currency"
+        ],
+        "title": "MonetaryAmount"
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalItems": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "offset",
+          "pageSize",
+          "totalItems"
+        ],
+        "title": "PageInfo"
+      },
+      "PreInvoice": {
+        "title": "PreInvoice",
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "invoiceMonth": {
+            "type": "string"
+          },
+          "fileDisplayId": {
+            "type": "string"
+          },
+          "invoiceYear": {
+            "type": "string"
+          },
+          "invoiceDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "serviceType": {
+            "type": "string"
+          },
+          "fileId": {
+            "type": "string"
+          },
+          "totalPaymentDue": {
+            "$ref": "#/components/schemas/MonetaryAmount"
+          },
+          "downloadLink": {
+            "type": "string"
+          }
+        }
+      },
+      "PreInvoicesPage": {
+        "title": "PreInvoicesPage",
+        "type": "object",
+        "properties": {
+          "preinvoices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PreInvoice"
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      }
+    }
+  }
+}
